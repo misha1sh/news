@@ -19,7 +19,7 @@ nohup.out
 .local/
 .profile
 .python_history
-.gitignore
+.gitconfig
 .ssh/
 .viminfo
 
