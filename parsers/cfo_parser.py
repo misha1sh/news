@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 import time
 import datetime
 import json
+import os
+
 headers = requests.utils.default_headers()
 headers.update(
     {
@@ -73,8 +75,10 @@ def get_cfo_days(days):
 
 if __name__ == "__main__":
     print('Start parsing cfo-russia.ru.')
-    res = get_cfo_days(365)
-    with open('cfo_news.json', 'w') as outfile:
+    res = get_cfo_days(2)
+    file_dir = os.path.dirname(os.path.realpath('__file__'))
+    file_name = os.path.join(file_dir, '../data/cfo_news.json')
+    with open(file_name, 'w+') as outfile:
         json.dump(res, outfile)
     print('Parsing cfo-russia.ru finished. Data load to cfo_news.json.')
     

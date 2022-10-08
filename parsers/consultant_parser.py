@@ -3,11 +3,12 @@ from bs4 import BeautifulSoup as bs
 import re
 import datetime as dt
 import json
+import os
 
 CONSULTANT_NEWS_URL='https://www.consultant.ru/legalnews/buh/'
 
 headers = rq.utils.default_headers()
-headers.update(
+headers.update( 
     {
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:104.0) Gecko/20100101 Firefox/104.0',
     }
@@ -54,6 +55,8 @@ def parse_consultant_news():
 if __name__ == "__main__":
     print('Start parsing consultant.')
     res = parse_consultant_news()
-    with open('consultant_news.json', 'w') as outfile:
+    file_dir = os.path.dirname(os.path.realpath('__file__'))
+    file_name = os.path.join(file_dir, '../data/consultant_news.json')
+    with open(file_name, 'w+') as outfile: 
         json.dump(res, outfile)
     print('Parsing consultant finished. Data load to consultant_news.json.')

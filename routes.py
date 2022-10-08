@@ -63,10 +63,8 @@ def index():
 @app.route('/api/v0/digest/accounter', methods=['GET'])
 def get_digest_accounter():
     digest = get_digest(load(), 'buh', 30, 3)
-    print(digest)
     response = []
     for news in digest:
-        print(news)
         tmp = {
             'url': news['url'],
             'publication_date': datetime.fromtimestamp(news['timestamp']).strftime('%Y-%m-%d %H:%M:%S'),

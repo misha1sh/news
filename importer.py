@@ -4,7 +4,7 @@ import re
 
 
 def load_cfo():
-    with open("cfo_news.json") as f:
+    with open("data/cfo_news.json") as f:
         data_cfo = json.load(f)
         
     def clear(data_cfo):
@@ -20,20 +20,20 @@ def load_cfo():
 
 
 def load_cons():
-    with open("consultant_news.json") as f:
+    with open("data/consultant_news.json") as f:
         data_cons = json.load(f)
     print("cons", len(data_cons))
     return data_cons
 
 def load_rbc():
-    with open("rbc_finances_news.json") as f:
+    with open("data/rbc_finances_news.json") as f:
         data_rbc = json.load(f)
     print("rbc", len(data_rbc))
     return data_rbc
 
 
 def load_klerk():
-    with open("klerk_news.json") as f:
+    with open("data/klerk_news.json") as f:
         data_klerk= json.load(f)
 
     def uniq(data_klerk):

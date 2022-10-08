@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup as bs
 import re
 import datetime as dt
 import json
+import os
 
 KLERK_NEWS_URL='https://www.klerk.ru/news/page/'
 
@@ -47,7 +48,9 @@ def parse_klerk_news(days=1):
 
 if __name__ == "__main__":
     print('Start parsing klerk.ru')
-    res = parse_klerk_news(365)
-    with open('klerk_news.json', 'w') as outfile:
+    res = parse_klerk_news(2)
+    file_dir = os.path.dirname(os.path.realpath('__file__'))
+    file_name = os.path.join(file_dir, '../data/kelrk_news.json')
+    with open(file_name, 'w+') as outfile:
         json.dump(res, outfile)
     print('Parsing klerk.ru finished. Data load to kelrk_news.json.')
