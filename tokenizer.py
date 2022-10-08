@@ -11,7 +11,7 @@ from nltk.tokenize import RegexpTokenizer
 import pymorphy2
 import string
 
-ru_stopwords = set(stopwords.words("russian") + list(string.punctuation + '»' + '—' +  '«') + ['п.','ст.', 'рф', "это"])
+ru_stopwords = set(stopwords.words("russian") + list(string.punctuation + '»' + '—' +  '«') + ['п.','ст.', 'рф', "это", 'Инвестдайджест', '🇷🇺', 'б.'])
 only_words_tokenizer = RegexpTokenizer(r'\w+')
 snowball = SnowballStemmer(language="russian")
 morph = pymorphy2.MorphAnalyzer()
@@ -50,11 +50,23 @@ def keywords_calc(text, filt=None):
     return res
 
 
+def fitler_documents_with_words(keyword_groups, words):
+    res = []
+    for document in keyword_groups:
+        skip = False
+        for word in words:
+            if word in document: 
+                skip = True
+                break
+        if skip: continue
+        
+        res.append(document)
+    return res
 
 from joblib import Parallel, delayed
-def keywords_groups_calc(data, filt=None):
-    keywords_groups = Parallel(n_jobs=16)(delayed(keywords_calc)(i['text'], filt) for i in data)
-    return keywords_groups
+def keywords_groups_calc(data, filt=None, typ='text'):
+    keywords_groups = Parallel(n_jobs=16)(delayed(keywords_calc)(i[typ], filt) for i in data)
+    return fitler_documents_with_words(keywords_groups, ['онлайн-курс', 'сберинвестиц'])
 
 
 # keywords_calc(tbl['text'][0][:200])

@@ -15,8 +15,7 @@ def get_data_before(data, days):
 
 
 
-def get_popular_keywords(data, idfs):
-    keyword_groups = keywords_groups_calc(data)
+def get_popular_keywords(keyword_groups, idfs):
     # idfs = idf_precalc([keyword_groups])
 
     # keyword_groups = tf_idf(keyword_groups, idfs)
@@ -38,12 +37,27 @@ def get_popular_keywords(data, idfs):
 # days = digest days count
 # count = articles count
 def get_digest(data_from_parser, person_type, days, count, debug=False):
-    data = get_data_for_person(data_from_parser, "buh")
+    data = get_data_for_person(data_from_parser, person_type)
     idfs = idf_precalc([ keywords_groups_calc(data) ])
 
     data = get_data_before(data, days=days)
-    popular_keywords = get_popular_keywords(data, idfs)
-    res = clusterize(data, popular_keywords, ccount=count, debug=debug)
+    keyword_groups = keywords_groups_calc(data)
+    popular_keywords = get_popular_keywords(keyword_groups, idfs)
+    res = clusterize(data, keyword_groups, popular_keywords, ccount=count, debug=debug)
+    return res
+
+
+# person_type = ceo or buh
+# days = digest days count
+# count = articles count
+def get_digest_words(data_from_parser, person_type, days, count, debug=False):
+    data = get_data_for_person(data_from_parser, person_type)
+    idfs = idf_precalc([ keywords_groups_calc(data) ])
+
+    data = get_data_before(data, days=days)
+    keyword_groups = keywords_groups_calc(data)
+    popular_keywords = get_popular_keywords(keyword_groups, idfs)
+    res = clusterize(data, keyword_groups, popular_keywords, ccount=count, debug=debug, return_words=True)
     return res
 
 def get_data_for_person(data_from_parser, person_type):
@@ -51,3 +65,9 @@ def get_data_for_person(data_from_parser, person_type):
         return data_from_parser["cfo"] 
     elif person_type == "buh":
         return data_from_parser["cons"] + data_from_parser["klerk"]+ data_from_parser["rbc"]
+    elif person_type == "all":
+        return data_from_parser["cons"] + data_from_parser["klerk"]+ data_from_parser["rbc"] + data_from_parser["cfo"] 
+    elif person_type == "all_without_rbc":
+        return data_from_parser["cons"] + data_from_parser["klerk"]+ data_from_parser["cfo"] 
+    elif person_type == "rbc":
+        return data_from_parser["rbc"]

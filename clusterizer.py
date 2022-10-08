@@ -4,6 +4,8 @@ import collections
 import hdbscan
 import numpy as np
 
+from keyworder import idf_precalc, tf_idf, keywords_sum, keywords_norm, keywords_mean, most_popular_keywords, keywords_diff
+
 def dist(d1, d2):
     s = 0
     for w in d1["short"] & d2["short"]:
@@ -75,14 +77,14 @@ def dist_most_common(d):
             d1 = d[i]
             d2 = d[j]
             for w in d1["short"] & d2["short"]:
-                words[w] += d1["long"][w]["count"] * d2["long"][w]["count"]
+                words[d1["long"][w]['word']] += d1["long"][w]["count"] * d2["long"][w]["count"]
                 
     words = list(words.items())
     words.sort(key=lambda w: -w[1])
     return words[:10]
 
 
-def clusterize(data, popular_keywords, ccount=3, debug=False):
+def clusterize(data, keyword_groups, popular_keywords, ccount=3, debug=False, return_words=False):
     distances = calc_distances(popular_keywords)
     labels = clusterize_labels(popular_keywords, distances)
     counter = collections.Counter(labels)
@@ -93,12 +95,12 @@ def clusterize(data, popular_keywords, ccount=3, debug=False):
         if label == -1:
             continue
         if debug: print("cluster: ", label, " count=", count)
-        # ddocs = []
+        ddocs = []
         ddocs_i = []
         dpopular_keywords = []
         for i in range(len(popular_keywords)):
             if labels[i] == label:
-                # ddocs.append(keyword_groups[i])
+                ddocs.append(keyword_groups[i])
                 ddocs_i.append(i)
                 dpopular_keywords.append(popular_keywords[i])
 
@@ -114,12 +116,19 @@ def clusterize(data, popular_keywords, ccount=3, debug=False):
             art = data[i]
             if debug: print(art["title"], art["url"])
             
-        if len(res) < ccount and len(distances_i) > 0:
-            score, i = distances_i[0]
-            res.append(data[i])
-
+            
+        if return_words:
+            if len(res) < ccount:
+                # res.append(dist_most_common(dpopular_keywords))
+                dd = most_popular_keywords(keywords_mean(ddocs), 10)
+                res.append([(i['word'], i['count']) for i in dd])
+        else:
+            if len(res) < ccount and len(distances_i) > 0:
+                score, i = distances_i[0]
+                res.append(data[i])
+                
         if debug: display(dict(dist_most_common(dpopular_keywords)))
-        # display(most_popular_keywords(keywords_mean(ddocs), 10))
+        if debug: display(most_popular_keywords(keywords_mean(ddocs), 10))
 
         if debug: print("\n")
         

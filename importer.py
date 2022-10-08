@@ -10,6 +10,7 @@ def load_cfo():
     def clear(data_cfo):
         res = []
         for i in data_cfo:
+            if 'конференц' in i['title']: continue
             res.append(i)
             res[-1]["text"] = re.sub("Узнать больше.*", "", res[-1]["text"])
         return res
