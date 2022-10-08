@@ -72,7 +72,7 @@ def get_cfo_days(days):
 
 
 if __name__ == "__main__":
-    res = get_cfo_days(30)
+    res = get_cfo_days(365)
     with open('cfo_news.json', 'w') as outfile:
         json.dump(res, outfile)
     
