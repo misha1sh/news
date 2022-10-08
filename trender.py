@@ -11,7 +11,7 @@ def get_trends(data_from_parser, days):
     def filt(normal):
         if normal.tag._POS in ["NUMB", "UNKN"] or normal.tag.POS in ["COMP", "PRTS", "PRTF"]:
             return True
-        if normal.normal_form in ["октябрь", "сентябрь"]:
+        if normal.normal_form in ["октябрь", "сентябрь", 'август']:
             return True
         return False
 
