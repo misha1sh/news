@@ -82,7 +82,7 @@ def dist_most_common(d):
     return words[:10]
 
 
-def clusterize(data, popular_keywords, count=3, debug=False):
+def clusterize(data, popular_keywords, ccount=3, debug=False):
     distances = calc_distances(popular_keywords)
     labels = clusterize_labels(popular_keywords, distances)
     counter = collections.Counter(labels)
@@ -114,7 +114,7 @@ def clusterize(data, popular_keywords, count=3, debug=False):
             art = data[i]
             if debug: print(art["title"], art["url"])
             
-        if len(res) < count and len(distances_i) > 0:
+        if len(res) < ccount and len(distances_i) > 0:
             score, i = distances_i[0]
             res.append(data[i])
 

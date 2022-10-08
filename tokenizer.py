@@ -25,7 +25,7 @@ def tokenize(text):
             res.append(word)
     return res
 
-def keywords_calc(text):
+def keywords_calc(text, filt=None):
     words = tokenize(text)
     res = {}
     for word in words:
@@ -36,6 +36,8 @@ def keywords_calc(text):
                 continue
             normal = normal[0]
             if normal.tag.POS == "INFN" or normal.tag.POS == "VERB" or normal.tag.POS == "ADJF":
+                continue
+            if filt and filt(normal):
                 continue
             
             res[short] = { 
@@ -50,8 +52,8 @@ def keywords_calc(text):
 
 
 from joblib import Parallel, delayed
-def keywords_groups_calc(data):
-    keywords_groups = Parallel(n_jobs=16)(delayed(keywords_calc)(i['text']) for i in data)
+def keywords_groups_calc(data, filt=None):
+    keywords_groups = Parallel(n_jobs=16)(delayed(keywords_calc)(i['text'], filt) for i in data)
     return keywords_groups
 
 

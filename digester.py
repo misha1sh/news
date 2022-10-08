@@ -37,17 +37,17 @@ def get_popular_keywords(data, idfs):
 # person_type = ceo or buh
 # days = digest days count
 # count = articles count
-def get_digest(data_from_parser, person_type, days, count):
+def get_digest(data_from_parser, person_type, days, count, debug=False):
     data = get_data_for_person(data_from_parser, "buh")
     idfs = idf_precalc([ keywords_groups_calc(data) ])
 
     data = get_data_before(data, days=days)
     popular_keywords = get_popular_keywords(data, idfs)
-    res = clusterize(data, popular_keywords, count=count, debug=False)
+    res = clusterize(data, popular_keywords, ccount=count, debug=debug)
     return res
 
 def get_data_for_person(data_from_parser, person_type):
     if person_type == "ceo":
-        return data_from_parser["cfo"]
+        return data_from_parser["cfo"] 
     elif person_type == "buh":
-        return data_from_parser["cons"] + data_from_parser["klerk"]
+        return data_from_parser["cons"] + data_from_parser["klerk"]+ data_from_parser["rbc"]
