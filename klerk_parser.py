@@ -1,5 +1,3 @@
-from hashlib import new
-from types import new_class
 import requests as rq
 from bs4 import BeautifulSoup as bs
 import re
@@ -15,7 +13,6 @@ def parse_klerk_news(days=1):
     while (True):
         response = rq.get(KLERK_NEWS_URL + str(page_number))
         page_number += 1
-        error_count = 0
         if (response.status_code == 200):
             news_urls = re.findall('klerk\.ru/buh/news/[\d]*/\"', response.text)[:-5]
             for news_url in news_urls:
@@ -44,14 +41,13 @@ def parse_klerk_news(days=1):
                         return ress
                     ress.append(res)
                 except Exception as e:
-                    error_count += 1
-                    print(e, url)
-                    if (error_count > 0):
-                        return ress
+                    print(e, 'url:', url)
             
             
 
 if __name__ == "__main__":
+    print('Start parsing klerk.ru')
     res = parse_klerk_news(365)
-    with open('klerk_news_365.json', 'w') as outfile:
+    with open('klerk_news.json', 'w') as outfile:
         json.dump(res, outfile)
+    print('Parsing klerk.ru finished. Data load to kelrk_news.json.')

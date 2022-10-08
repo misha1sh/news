@@ -3,9 +3,8 @@ from bs4 import BeautifulSoup as bs
 import datetime as dt
 import json
 import re
-import string
 
-RBC_FINANCE_URL = 'https://www.rbc.ru/v10/ajax/get-news-by-filters/?category=finances&limit=20&offset='
+RBC_FINANCE_URL = 'https://rbc.ru/v10/ajax/get-news-by-filters/?category=finances&limit=20&offset='
 CLEANR = re.compile('<.*?>') 
 
 
@@ -58,7 +57,9 @@ def parse_rbc_news(days=1):
             
 
 if __name__ == "__main__":
+    print('Start parsing rbc finances.')
     res = parse_rbc_news(365)
     with open('rbc_finances_news.json', 'w') as outfile:
         json.dump(res, outfile)
+    print('Parsing rbc finances finished. Data load to rbc_finances_news.json.')
     

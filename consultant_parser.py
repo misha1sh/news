@@ -1,5 +1,3 @@
-from hashlib import new
-from types import new_class
 import requests as rq
 from bs4 import BeautifulSoup as bs
 import re
@@ -27,7 +25,6 @@ def parse_consultant_news():
     if (response.status_code == 200):
         news_urls = re.findall('legalnews/[\d]*/', response.text)
         news_urls = list(set(news_urls))
-        print(len(news_urls))
         for news_url in news_urls:
             res = {}
             url = 'https://www.consultant.ru/' + news_url
@@ -55,6 +52,8 @@ def parse_consultant_news():
             
 
 if __name__ == "__main__":
+    print('Start parsing consultant.')
     res = parse_consultant_news()
     with open('consultant_news.json', 'w') as outfile:
         json.dump(res, outfile)
+    print('Parsing consultant finished. Data load to consultant_news.json.')
