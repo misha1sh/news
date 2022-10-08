@@ -43,6 +43,7 @@ def parse_klerk_news(days=1):
                     if (days * 86400 + res['timestamp'] < dt.datetime.now().timestamp()):
                         return ress
                     ress.append(res)
+                    print(len(ress))
                 except Exception as e:
                     error_count += 1
                     print(e, url)
