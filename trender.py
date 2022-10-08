@@ -17,7 +17,7 @@ def get_trends(data_from_parser, days):
 
     idfs = idf_precalc([ keywords_groups_calc(data, filt=filt) ])
 
-    time_begin = time.time() - datetime.timedelta(days=30).total_seconds()
+    time_begin = time.time() - datetime.timedelta(days=days).total_seconds()
     data_before = list(filter(lambda i: time_begin <= i["timestamp"], data))
     data_after = list(filter(lambda i: time_begin > i["timestamp"], data))
 
