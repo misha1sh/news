@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import datetime
+import json
 headers = requests.utils.default_headers()
 headers.update(
     {
@@ -22,7 +23,7 @@ def get_cfo_article(url):
 
 
     html = str(soup.find("div", "news-detail").find("span", itemprop="description"))
-    return cleanhtml(html).replace("\t", "").replace("\xa0", "")
+    return cleanhtml(html).replace("\t", " ").replace("\xa0", " ")
 
 # "https://www.cfo-russia.ru/novosti/?PAGEN_1=4"
 def get_cfo_page(url):
@@ -70,3 +71,8 @@ def get_cfo_days(days):
     return list(filter(lambda i : time_begin <= i["timestamp"], res))
 
 
+if __name__ == "__main__":
+    res = get_cfo_days(30)
+    with open('cfo_news.json', 'w') as outfile:
+        json.dump(res, outfile)
+    
