@@ -1,15 +1,5 @@
 #!/bin/bash
 
-pip3 install -q beautifulsoup4 pandas numpy IPython requests datetime
+pip3 install -q beautifulsoup4 pandas numpy IPython requests datetime flask nltk pymorphy2  joblib==1.1.0 hdbscan
 
-start=`date +%s`
-
-python3 ./rbc_finances_parser.py &
-python3 ./cfo_parser.py &
-python3 ./klerk_parser.py &
-python3 ./consultant_parser.py &&
-wait
-
-end=`date +%s`
-runtime=$((end-start))
-echo "Parsing runtime: $runtime"
+python3 ./routes.py
