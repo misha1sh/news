@@ -3,58 +3,9 @@ import json
 from datetime import datetime
 from digester import get_digest
 from importer import load
+from trender import calc_trends2
 
 app = Flask(__name__)
-
-
-
-digests = [
-    {
-        'id': 1,
-        'profile': 'accounter',
-        'title': u'Демобилизация',
-        'description': u'Поезд к дому мчится полечу домой как птица',
-        'date': u'12.10.2022',
-        'url': 'www.facebook.com'
-    },
-    {
-        'id': 2,
-        'profile': 'ceo',
-        'title': 'ставка ЦБ',
-        'description': 'Кризис аларм',
-        'date': '10.01.2021',
-        'url': 'www.vk.com'
-    }
-
-]
-
-trend = {'trends': ['мобилизация', 'Путин', 'Любовь', 'секс', 'наркотики']}
-insight = {'insights': ['тренды', 'секс']}
-
-
-# create digests for the accounter profile
-def digest_accounter():
-    digest = []
-    for i in digests:
-        if i['profile'] == 'accounter':
-            digest = i
-    return json.dumps(digest, ensure_ascii=False).encode('utf8')
-
-def digest_ceo():
-    digest = []
-    for i in digests:
-        if i['profile'] == 'ceo':
-            digest = i
-    return json.dumps(digest, ensure_ascii=False).encode('utf8')
-
-def trends():
-    return json.dumps(trend, ensure_ascii=False).encode('utf8')
-
-def insights():
-    return json.dumps(insight, ensure_ascii=False).encode('utf8')
-
-
-
 
 @app.route('/')
 def index():
@@ -76,15 +27,53 @@ def get_digest_accounter():
 
 @app.route('/api/v0/digest/ceo', methods=['GET'])
 def get_digest_ceo():
-    return digest_ceo()
+    digest = get_digest(load(), 'ceo', 30, 3)
+    response = []
+    for news in digest:
+        tmp = {
+            'url': news['url'],
+            'publication_date': datetime.fromtimestamp(news['timestamp']).strftime('%Y-%m-%d %H:%M:%S'),
+            'title': news['title'],
+            'description': news['description']
+        }
+        response.append(tmp)
+    return json.dumps(response, ensure_ascii=False).encode('utf8')
 
-@app.route('/api/v0/digest/trends', methods=['GET'])
+@app.route('/api/v0/trends', methods=['GET'])
 def get_digest_trends():
-    return trends()
+    def get_body(val):
+        if (type(val) == list):
+            ans = []
+            for i in val:
+                ans += get_body(i)
+            return ans
+        else:
+            return [val]
+    trend = calc_trends2(load(), 180, 3)
+    response = []
+    for i in get_body(trend[1]):
+        response.append({
+            'trend': i
+        })
+    return json.dumps(response[3:], ensure_ascii=False).encode('utf8')
 
-@app.route('/api/v0/digest/insights', methods=['GET'])
+@app.route('/api/v0/insights', methods=['GET'])
 def get_digest_insights():
-    return insights()
+    def get_body(val):
+        if (type(val) == list):
+            ans = set()
+            for i in val:
+                ans.update(get_body(i))
+            return list(ans)
+        else:
+            return [val]
+    insight = calc_trends2(load(), 3, 3)
+    response = []
+    for i in get_body(insight[1]):
+        response.append({
+            'insight': i
+        })
+    return json.dumps(response, ensure_ascii=False).encode('utf8')
 
 
 if __name__ == '__main__':

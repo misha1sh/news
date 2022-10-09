@@ -62,7 +62,7 @@ def get_digest_words(data_from_parser, person_type, days, count, debug=False, us
 
 def get_data_for_person(data_from_parser, person_type):
     if person_type == "ceo":
-        return data_from_parser["cfo"] 
+        return data_from_parser["cfo"] + data_from_parser["rbc"]
     elif person_type == "buh":
         return data_from_parser["cons"] + data_from_parser["klerk"]+ data_from_parser["rbc"]
     elif person_type == "all":
