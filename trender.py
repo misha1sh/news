@@ -42,3 +42,50 @@ def get_trends(data_from_parser, days):
         res.append(normal.normal_form)
 
     return res
+
+# calc_trends2(data_from_parser, use_titles=False)
+def calc_trends2(data_from_parser, use_titles=False):
+    from tokenizer import snowball
+    from digester import get_digest_words
+    import pymorphy2
+
+    morph = pymorphy2.MorphAnalyzer()
+    digest_words = get_digest_words(data_from_parser, person_type="all", days=180, count=3, debug=False, use_titles=use_titles)
+
+    res = []
+    articles_res = []
+    for words in digest_words:
+        rres = []
+        articles_rres = []
+        for word in words:
+            normal = morph.parse(word[0])
+            normal = normal[0]
+            if normal.tag._POS in ["NUMB", "UNKN"]:
+                continue
+            if normal.tag.POS in ["COMP", "PRTS", "PRTF"]:
+                continue
+            if normal.normal_form in ["октябрь", "сентябрь", 'август', 'ноябрь', 'июнь', 'вебинар']:
+                continue
+
+            form = word[0]
+            if word[0].upper() == word[0]:
+                form = word[0]
+            elif normal.score > 0.7:
+                form = normal.normal_form
+
+            short = snowball.stem(word[0])
+            articles_rrres = []
+            for i in word[2]:
+                if short in i['title'] or word[0] in i['title'] or form in i['title']:
+                    articles_rrres.append(i['title'])
+                    # print(word[0], i['title'])
+
+            articles_rres.append(articles_rrres)
+            rres.append(form)
+            if len(rres) == 3:
+                break
+        articles_res.append(articles_rres)
+
+        res.append(rres)
+    return res, articles_res
+

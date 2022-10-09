@@ -50,14 +50,14 @@ def get_digest(data_from_parser, person_type, days, count, debug=False):
 # person_type = ceo or buh
 # days = digest days count
 # count = articles count
-def get_digest_words(data_from_parser, person_type, days, count, debug=False):
+def get_digest_words(data_from_parser, person_type, days, count, debug=False, use_titles=False):
     data = get_data_for_person(data_from_parser, person_type)
     idfs = idf_precalc([ keywords_groups_calc(data) ])
 
     data = get_data_before(data, days=days)
     keyword_groups = keywords_groups_calc(data)
     popular_keywords = get_popular_keywords(keyword_groups, idfs)
-    res = clusterize(data, keyword_groups, popular_keywords, ccount=count, debug=debug, return_words=True)
+    res = clusterize(data, keyword_groups, popular_keywords, ccount=count, debug=debug, return_words=True, use_titles=use_titles)
     return res
 
 def get_data_for_person(data_from_parser, person_type):
