@@ -43,14 +43,14 @@ def get_trends(data_from_parser, days):
 
     return res
 
-# calc_trends2(data_from_parser, use_titles=False)
-def calc_trends2(data_from_parser, use_titles=False):
+# calc_trends2(data_from_parser, days=180, count=3, use_titles=False)
+def calc_trends2(data_from_parser, days, count, use_titles=False):
     from tokenizer import snowball
     from digester import get_digest_words
     import pymorphy2
 
     morph = pymorphy2.MorphAnalyzer()
-    digest_words = get_digest_words(data_from_parser, person_type="all", days=180, count=3, debug=False, use_titles=use_titles)
+    digest_words = get_digest_words(data_from_parser, person_type="all", days=days, count=count, debug=False, use_titles=use_titles)
 
     res = []
     articles_res = []
