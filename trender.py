@@ -88,4 +88,3 @@ def calc_trends2(data_from_parser, days, count, use_titles=False):
 
         res.append(rres)
     return res, articles_res
-

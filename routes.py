@@ -7,10 +7,6 @@ from trender import calc_trends2
 
 app = Flask(__name__)
 
-@app.route('/')
-def index():
-    return "Hello, World!"
-
 @app.route('/api/v0/digest/accounter', methods=['GET'])
 def get_digest_accounter():
     digest = get_digest(load(), 'buh', 30, 3)
@@ -77,4 +73,4 @@ def get_digest_insights():
 
 
 if __name__ == '__main__':
-    app.run(debug=False, port=8080) 
+    app.run(debug=False, port=8080)

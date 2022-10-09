@@ -1,4 +1,6 @@
 import math
+
+
 def idf_precalc(keyword_groups_list):
     from collections import defaultdict
     df_counts = defaultdict(lambda: 0)
